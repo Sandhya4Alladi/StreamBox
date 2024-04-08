@@ -1,0 +1,46 @@
+{
+  "name": "streambox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "mocha ./test/*.spec.js --timeout 8000 --exit",
+    "coverage": "nyc --all --reporter=html --reporter=text mocha test/*.spec.js --timeout 5000 --exit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1594.0",
+    "aws-transcription-to-vtt": "^1.0.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "chai": "^5.1.0",
+    "chai-http": "^4.4.0",
+    "child_process": "^1.0.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "ffmpeg": "^0.0.4",
+    "ffmpeg-static": "^5.2.0",
+    "fs": "^0.0.1-security",
+    "gridfs-stream": "^1.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^10.4.0",
+    "mongoose": "^8.3.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.13",
+    "nodemon": "^3.1.0",
+    "nyc": "^15.1.0",
+    "path": "^0.12.7",
+    "sinon": "^17.0.1",
+    "uuid": "^9.0.1"
+  }
+}
