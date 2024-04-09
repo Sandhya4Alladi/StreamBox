@@ -1,4 +1,4 @@
-import { createError } from "../error.js";
+
 import Comment from "../models/Comment.js";
 import User from "../models/User.js";
 import Video from "../models/Video.js"
@@ -61,7 +61,7 @@ export const deleteUser = async (req,res,next) => {
             return res.status(500).json({ message: 'Internal server error' });
         }
     }else{
-        return next(createError(403,"You can delete only your account!"));
+        return next(new Error("You can delete only your account!"));
     }
 };
 

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import { createError } from "../error.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
@@ -145,7 +144,8 @@ export const forgotPW = async (req, res, next) => {
   req.session.email = useremail;
 
   const user = await User.findOne({ email: useremail });
-  if (!user) return next(createError(404, "User not found!"));
+  if (!user) 
+  return res.status(404).json({message:'User not found!'});
 
   const name= useremail.split('@')[0]
 
