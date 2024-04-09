@@ -52,6 +52,7 @@ display:  flex;
 flex-wrap:  wrap;
 gap: 15px;
 height: calc(100vh - 114px);
+padding: 25px;
 cursor: pointer;
 }
 
@@ -105,10 +106,69 @@ font-variation-settings:
 .explore-tags{
 display: none;
 }
+.sidebar {
+  height: calc(100vh - 114px);
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 50px;}
+  .sidebar a {font-size: 18px;}
+}
 </style>
 <body>
 <div id="page-content-wrapper">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div id="main">
+      <button class="openbtn" onclick="openSide()">☰</button></div>
     <button class="navbar-brand p-2 btn btn-primary" id="streambox-logo" >
       <img src="/images/homelogo.jpg" alt="Your Logo" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>STREAMBOX</b>
     </button>
@@ -176,7 +236,7 @@ display: none;
 <div class="d-flex" id="wrapper">
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar-wrapper">
-
+    <a href="javascript:void(0)" class="closebtn" onclick="closeSide()">×</a>
       <div class="list-group list-group-flush ">
         <form method="get" action="/home">
           <button class="list-group-item list-group-item-action" style="border: none; outline: none;">
@@ -259,14 +319,30 @@ display: none;
   </div>
 </div>
 <div class="main">
-  <div id="videos">
+  <div id="videos"></div>
+  
 </div>
 <!-- <div>
-<iframe width="1000" height="800" src="http://localhost:5000/embed?key=660ce2f8b0a3fb0e5b2572dd-32f2639b-237f-478d-9e99-be6e1d555033-hr.mp4" frameborder='0'></iframe>
+
+
+<iframe width="1000" height="800" src="http://localhost:5000/embed?key=660ce2f8b0a3fb0e5b2572dd-e5aca8c0-2b95-49c2-9c05-b464ffb5cd7c-intro-dbox.mp4" frameborder='0'></iframe>
+
 </div> -->
-<!-- <footer>
-</footer> -->
+
 <script src="/static/js/cards.js"></script>
+<script>
+     function openSide() {
+      document.getElementById("sidebar-wrapper").style.marginTop = "6%";
+  document.getElementById("sidebar-wrapper").style.width = "12%";
+  document.getElementById("videos").style.marginLeft = "12%";
+}
+
+function closeSide() {
+  document.getElementById("sidebar-wrapper").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+  document.getElementById("videos").style.marginLeft = "0";
+}
+</script>
     <script>
 
         const allVideos = <%- JSON.stringify(data) %>;

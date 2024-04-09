@@ -41,8 +41,8 @@ export const verifyEmail = async (req, res, next) => {
     req.session.email = useremail;
 
     const user = await User.findOne({ email: useremail });
-    if (user) return next(createError(409, "User already exists!"));
-
+     if (user) 
+      return res.status(409).json({message: 'usera already exists'});
     const name= useremail.split('@')[0]
 
     const otp = generateRandomNumber();
@@ -85,20 +85,20 @@ export const signin = async (req, res, next) => {
   try {
 
     const user = await User.findOne({ email: req.body.email });
-    if (!user) return next(createError(404, "User not found!"));
-
+    if (!user){ 
+     return res.status(404).json({message: 'User not found!'});
+    }
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
-    if (!isCorrect) return next(createError(400, "Wrong Credentials"));
-
+    if (!isCorrect){  
+          return res.status(400).json({message: 'wrong credentials!'});
+    }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "24h" });
     const { password, ...others } = user._doc;
 
-    res
-      .cookie("access_token", token, {
+    res.cookie("access_token", token, {
          httpOnly: true,
-      })
-      .status(200)
-      .redirect("/home")
+      });
+      res.status(200).redirect("/home");
     console.log("User Validated");
   } catch (err) {
     next(err);
@@ -170,7 +170,7 @@ export const validateOTP = async (req, res, next) => {
   const param_otp = d1*100000 + d2*10000 + d3*1000 + d4*100 + d5*10 +d6*1;
 
   if (Number(otp) === param_otp) {
-    console.log('otp validated')
+    // console.log('otp validated')
     res.status(200).json({message:"OTP Validated"});
   } else {
     res.status(500).json({message:"Invalid OTP"});

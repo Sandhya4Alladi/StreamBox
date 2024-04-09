@@ -23,7 +23,6 @@ function display(data, images) {
       title.style.width = "100%"; 
 
       a.appendChild(title);
-
       a.addEventListener("click", function () {
         fetch("/videos/view/" + data[i]._id, {
           method: "PUT",

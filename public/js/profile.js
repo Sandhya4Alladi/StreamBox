@@ -23,12 +23,11 @@ editButton.addEventListener('click', function() {
     if (!isEditMode) {
         toggleEditMode();
     } else {
-        // const userId = '<%= user._id %>';
-        console.log('userId....', userId); 
         const requestBody = {
             username: inputUsername.value,
             email: inputEmail.value
         };
+        console.log(requestBody)
         fetch(`/users/${userId}`, {
             method: 'PUT',
             headers: {
@@ -48,9 +47,15 @@ editButton.addEventListener('click', function() {
         });
     }
 });
-    
-deleteButton.addEventListener('click', function() {
-    // const userId = '<%= user._id %>';
+
+
+deleteButton.addEventListener('click', function(event) {
+    event.preventDefault(); 
+    $('#deleteConfirmationModal').modal('show'); 
+});
+  
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    console.log('Confirmed action');
     fetch(`/users/${userId}`, {
         method: 'DELETE'
     }).then(res => {
@@ -67,4 +72,5 @@ deleteButton.addEventListener('click', function() {
     }).catch(error => {
         console.error('Fetch error:', error);
     });
-});
+    $('#confirmationModal').modal('hide');
+});  

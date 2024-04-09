@@ -203,7 +203,6 @@ function downloadJsonFile(bucketName, objectKey, callback) {
       console.error("Error downloading JSON file from S3:", err);
       callback(err);
     } else {
-      // Data is a buffer containing the contents of the JSON file
       callback(null, JSON.parse(data.Body.toString("utf-8")));
     }
   });

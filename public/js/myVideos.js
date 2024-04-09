@@ -75,7 +75,6 @@ function display(data, images) {
             // Append elements to title container
             titleContainer.appendChild(title);
             titleContainer.appendChild(ellipsisButton);
-            titleContainer.appendChild(dropdownMenu);
 
             // Append title container to anchor element
             a.appendChild(titleContainer);
@@ -91,12 +90,34 @@ function display(data, images) {
             card.appendChild(imgElement);
             card.appendChild(a);
 
+            // Create container for delete button
+            const deleteContainer = document.createElement("div");
+            deleteContainer.classList.add("delete-container");
+            deleteContainer.style.position = "absolute";
+            deleteContainer.style.bottom = "0px";
+            deleteContainer.style.right = "150px"; // Adjust position as needed
+
+            // Append dropdown menu to delete container
+            deleteContainer.appendChild(dropdownMenu);
+
+            // Append delete container to card
+            card.appendChild(deleteContainer);
+
             document.getElementById("videos").appendChild(card);
+
         }
     }
 }
+ 
+function confirmDelete(videoId) {
+    $('#deleteConfirmationModal').modal('show');
+    document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+        console.log('Confirmed action');
+        deleteVideo(videoId);
+        $('#confirmationModal').modal('hide');
+    });  
+}
 
-// Function to handle deletion of a video
 async function deleteVideo(videoId) {
     try {
         const response = await fetch(`/videos/${videoId}`, {
@@ -104,27 +125,12 @@ async function deleteVideo(videoId) {
         });
         if (response.ok) {
             console.log("Video deleted successfully");
-            showToast('Video deleted successfully', 'success');
             location.reload();
         } else {
-            showToast(`Error deleting video: ${response.status}`, 'danger');
             console.error("Error deleting video:", response.status);
         }
     } catch (error) {
-        // Handle fetch error
-        showToast('Fetch error', 'danger');
         console.error('Fetch error:', error);
     }
 }
 
-// Function to display confirmation dialog and delete the video if confirmed
-async function confirmDelete(videoId) {
-    const confirmed = confirm('Do you want to delete your video?');
-    if (confirmed) {
-        await deleteVideo(videoId);
-    }
-}
-
-function showToast(message, type) {
-    // Implementation of showToast function goes here
-}

@@ -156,7 +156,6 @@ input{
 footer {
   padding-bottom: 150px;
   padding-top: 150px;
-  background-image: url('./bg.png');
   background-size: cover; /* or 'contain', depending on your preference */
   background-repeat: no-repeat;
   background-position: center center;
