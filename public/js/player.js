@@ -1,6 +1,6 @@
 
 
-// Function to show the message box
+
 function showMessageBox(key) {
   document.getElementById('messageBoxOverlay').style.display = 'flex';
   const keyval=key.toString();
@@ -8,7 +8,7 @@ function showMessageBox(key) {
   
 }
 
-// Function to close the message box
+
 function closeMessageBox() {
   document.getElementById('messageBoxOverlay').style.display = 'none';
 }

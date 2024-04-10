@@ -14,4 +14,4 @@ document.getElementById('confirmActionButton').addEventListener('click', functio
         }
     })
     $('#confirmationModal').modal('hide');
-});  
+})

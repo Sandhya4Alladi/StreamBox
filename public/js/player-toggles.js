@@ -21,10 +21,10 @@ function skipForward() {
 function togglePause() {
   if (video.paused) {
     video.play();
-    pauseIcon.className = "fa fa-pause"; // Change icon to pause
+    pauseIcon.className = "fa fa-pause"; 
   } else {
-    video.pause(); // If video is playing, pause it
-    pauseIcon.className = "fa fa-play"; // Change icon to play
+    video.pause(); 
+    pauseIcon.className = "fa fa-play"; 
   }
 }
 

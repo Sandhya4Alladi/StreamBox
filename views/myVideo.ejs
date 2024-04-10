@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamBox</title>
     <link rel="icon" type="image/png" href="/images/play.png">
-    <!-- Bootstrap CSS -->
+ 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
+  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
   <div id="page-content-wrapper">
@@ -40,12 +40,7 @@
                   </button>
                 </form>
               </li>
-            
-          <!-- <li class="nav-item ml-3">
-            <form class="form-inline">
-              <button style="border: none; outline: none;" class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-bell"></i>
-            </form>
-          </li> -->
+        
           <li class="nav-item ml-3">
             <form class="form-inline" method="get" action="/users/find">
               <button style="border: none; outline: none;" class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-user"></i>
@@ -65,9 +60,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="confirmationModalLabel">Confirm Logut</h5>
-          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> -->
+         
         </div>
         <div class="modal-body">
           Are you sure you want to logout?
@@ -98,7 +91,7 @@
   </div>
 <div class="main-body">
 <div class="d-flex" id="wrapper">
-  <!-- Sidebar -->
+ 
   <div class="sidebar" id="sidebar-wrapper">
 
       <div class="list-group list-group-flush ">
@@ -187,10 +180,9 @@
   </div>
 </div>
 </div>
-<!-- <footer>
-</footer> -->
+
 <script src="/static/js/myVideos.js"></script>
-    <!-- Include inline JavaScript if needed -->
+
     <script>
         const allVideos = <%- JSON.stringify(data) %>;
         const images = <%- JSON.stringify(images) %>;

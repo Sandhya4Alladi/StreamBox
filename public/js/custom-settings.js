@@ -39,7 +39,7 @@ customSave.addEventListener('click', function(event){
         })
         .then(response => {
             if(response.ok){
-                window.location.href = '/customs'; // Redirect to the '/customs' page
+                window.location.href = '/customs'; 
             } else {
                 console.log(response);
             }

@@ -11,7 +11,6 @@ export const verifyToken=(req,res,next)=>{
           }
           else{
               req.user= {id:user.id, username:user.username}
-            //   console.log(req.user);
               next();
           }
       })

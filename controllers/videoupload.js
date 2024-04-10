@@ -70,7 +70,7 @@ export const uploadVideo = async (req, res) => {
       });
     });
  
-    // await upscaleVideo(videobucketName, videoObjectKey);
+  
     
     const imagebucketname = process.env.IMAGE_BUCKET;
     const imageName = (req.files.imageFile[0].originalname).replace(/ /g, "");
@@ -196,7 +196,7 @@ export function downloadJsonFile(bucketName, objectKey, callback) {
       console.error("Error downloading JSON file from S3:", err);
       callback(err);
     } else {
-      // Data is a buffer containing the contents of the JSON file
+
       callback(null, JSON.parse(data.Body.toString("utf-8")));
     }
   });
@@ -210,89 +210,9 @@ export async function deleteS3Object(bucketName, objectKey){
  
     try{
       const data = await s3.deleteObject(params).promise()
-      // console.log("Object deleted successfully:", data);
+     
     }catch(err){
-        // console.error(err);
+       
     }
 }
- 
-// const mediaConvert = new AWS.MediaConvert();
- 
-// export const upscaleVideo = async (bucketName, objectKey) => {
-//   try {
-//     const params = {
-//       Role: 'arn:aws:iam::058264369877:role/mediaconvert',
-//       Settings: {
-//         Inputs: [{
-//           FileInput: `s3://${bucketName}/${objectKey}`
-//         }],
-//         OutputGroups: [{
-//           Name: 'File Group',
-//           OutputGroupSettings: {
-//             Type: 'FILE_GROUP_SETTINGS',
-//             FileGroupSettings: {
-//               Destination: `s3://${process.env.UPSCALED_VIDEO_BUCKET}/`
-//             }
-//           },
-//           Outputs: [
-//             {
-//               Extension: 'mp4',
-//               VideoDescription: {
-//                 Width: 640,
-//                 Height: 360,
-//                 ScalingBehavior: 'DEFAULT',
-//                 CodecSettings: {
-//                   Codec: 'H.264'
-//                 }
-//               }
-//             },
-//             {
-//               Extension: 'mp4',
-//               VideoDescription: {
-//                 Width: 1280,
-//                 Height: 720,
-//                 ScalingBehavior: 'DEFAULT',
-//                 CodecSettings: {
-//                   Codec: 'H.264'
-//                 }
-//               }
-//             },
-//             {
-//               Extension: 'mp4',
-//               VideoDescription: {
-//                 Width: 1920,
-//                 Height: 1080,
-//                 ScalingBehavior: 'DEFAULT',
-//                 CodecSettings: {
-//                   Codec: 'H.264'
-//                 }
-//               }
-//             }
-//           ]
-//         }]
-//       }
-//     };
- 
-//     const { Job } = await mediaConvert.createJob(params).promise();
-//     console.log("Job created:", Job.Id);
- 
-//     // Monitor job status and handle completion
-//     const interval = setInterval(async () => {
-//       const { Job } = await mediaConvert.getJob({ Id: Job.Id }).promise();
-//       const status = Job.Status;
-//       console.log(`Transcoding job status: ${status}`);
-//       if (status === 'COMPLETE') {
-//         clearInterval(interval);
-//         console.log('Transcoding job completed');
-//       } else if (status === 'ERROR') {
-//         clearInterval(interval);
-//         console.error('Transcoding job failed');
-//       }
-//     }, 5000); // Check status every 5 seconds
- 
-//     console.log('Transcoding job started');
-//   } catch (err) {
-//     console.error('Error transcoding video:', err);
-//   }
-// };
  

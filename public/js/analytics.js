@@ -60,7 +60,7 @@ function createVideoInfoContainer(i, title, likes, dislikes, plays, views) {
                     document.getElementById('playRate').textContent = Math.round((totalPlays/totalViews)*100)+'%';
                     const ctx = document.getElementById('donutChart').getContext('2d');
 
-                    // Creating the donut chart
+                  
                     const donutChart = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
@@ -103,7 +103,6 @@ function createVideoInfoContainer(i, title, likes, dislikes, plays, views) {
             const dislikes = decodedData.dislikes;
             const plays = decodedData.plays;
             const views = decodedData.views;
-            //const playRate = (plays/views)
             const containerHTML = createVideoInfoContainer(i, title, likes, dislikes, plays, views);
             document.querySelector('.container').insertAdjacentHTML('beforeend', containerHTML);
 

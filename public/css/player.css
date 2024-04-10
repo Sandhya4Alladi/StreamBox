@@ -18,7 +18,7 @@ body {
   min-height: 90vh;
   align-items: center;
   justify-content: center;
-  /* background-color: black; */
+
 }
 body > h1 {
   margin: 1.5rem 0;
@@ -29,13 +29,7 @@ body > h1 {
 
 
 
-/* .player {
-  width: 95%;
-  max-width: 750px;
-  position: relative;
-  font-size: 0;
-  overflow: hidden;
-} */
+
 .video-container {
   width: 100%;
 }
@@ -68,7 +62,7 @@ body > h1 {
   display: flex;
   flex-basis: 100%;
   height: 5px;
-  /* background: rgba(0,0,0,0.5); */
+
   background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   height: 15px;
@@ -82,44 +76,43 @@ body > h1 {
 
 
 .heart-btn, .clock-btn, .line-btn, .chat-btn, .like-btn, .dislike-btn {
-  /* Adjust size as needed */
+
   color: gray;
-   cursor: pointer; /* Add pointer cursor */
+   cursor: pointer; 
  }
  .like-btn.clicked {
      
-  color: blue; /* Color when clicked */
+  color: blue; 
 }
 
 .selected {
      
-  color: blue; /* Color when clicked */
+  color: blue; 
 }
 
 .dislike-btn.clicked {
      
-  color: blue; /* Color when clicked */
+  color: blue; 
 }
 
  .clock-btn.clicked {
-   color: blue; /* Color when clicked */
+   color: blue; 
  }
  
  .chat-btn.clicked {
-   color: lightblue; /* Color when clicked */
+   color: lightblue; 
  }
 
  #chatContent  {
-  /* max-width: 750px; */
+
   position: relative;
   overflow: hidden;
   text-align: justify;
   align-items: center;
-  /* float: left; */
+
   padding-left: 800px;
 }
 #cmtContainer{
-  /* justify-content: center; */
   padding-left: 40%;
   padding-right: 6%;
 }
@@ -156,8 +149,8 @@ input{
 footer {
   padding-bottom: 150px;
   padding-top: 150px;
-  background-size: cover; /* or 'contain', depending on your preference */
+  background-size: cover; 
   background-repeat: no-repeat;
   background-position: center center;
-  /* You can also specify other styles such as height, padding, etc. */
+ 
 }

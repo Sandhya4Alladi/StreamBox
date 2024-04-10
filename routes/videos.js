@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import {upload} from "../controllers/videoupload.js"
 import { watch } from "../controllers/user.js";
 import Custom from "../models/Custom.js";
-import Video from "../models/Video.js";
+
 
 const router = express();
 
@@ -33,7 +33,6 @@ router.post("/uploadvideo", verifyToken, upload.fields([
 ]),addVideo)
 
 
-//router.get('/playvideo', verifyToken, getVideoVtt)
 router.get('/playvideo', verifyToken, async (req, res) => {
    const custom = await Custom.findOne({userId: req.user.id});
    const logo = await extractS3data(process.env.LOGO_BUCKET, custom.logo);
@@ -41,7 +40,7 @@ router.get('/playvideo', verifyToken, async (req, res) => {
 });
 
 router.get('/stream', extractS3Object)
-// router.get('/streamvideo', verifyToken, extractS3Object)
+
 
 router.get('/myvideos', verifyToken, getMyVideos)
 
@@ -52,9 +51,9 @@ router.get('/watchLater', verifyToken, getWatchLater)
 router.post("/watch", verifyToken, watch)
 
 router.post("/add", verifyToken, addVideo)
-// router.put("/:id", verifyToken, addVideo)
+
 router.delete("/:id", verifyToken, deleteVideo)
-//router.get("/find/:id", getVideo)
+
 router.put("/view/:id",addView)
 router.put("/plays", verifyToken, plays);
 router.get("/trend",trend)

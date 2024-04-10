@@ -13,4 +13,4 @@ logobtn.addEventListener("click", function () {
     .catch((error) => {
         console.error("Fetch error:", error);
     });
-});
+})

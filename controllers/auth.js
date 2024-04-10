@@ -1,11 +1,10 @@
-import mongoose from "mongoose";
+
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import Custom from "../models/Custom.js";
-import { Console, error } from "console";
 dotenv.config()
 
 export const signup = async (req, res, next) => {
@@ -172,7 +171,7 @@ export const validateOTP = async (req, res, next) => {
   const param_otp = d1*100000 + d2*10000 + d3*1000 + d4*100 + d5*10 +d6*1;
 
   if (Number(otp) === param_otp) {
-    // console.log('otp validated')
+   
     res.status(200).json({message:"OTP Validated"});
   } else {
     res.status(500).json({message:"Invalid OTP"});
@@ -197,7 +196,7 @@ export const logout =  (req, res) => {
   res.clearCookie('access_token'); 
   req.session.destroy((err) => {
     if (err) {
-      // console.error("Error destroying session:", err);
+      
       return res.status(500).send("Internal server error");
     }else{
       res.redirect("/auth/signup");

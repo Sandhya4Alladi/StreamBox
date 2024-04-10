@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamBox</title>
     <link rel="icon" type="image/png" href="../images/play.png">
-    <!-- Bootstrap CSS -->
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/home.css">
-    <!-- <link rel="stylesheet" href="../css/video-player.css"> -->
+
 </head>
 <style>
   .sidebar {
@@ -158,7 +158,7 @@ display: none;
   padding: 16px;
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+
 @media screen and (max-height: 450px) {
   .sidebar {padding-top: 50px;}
   .sidebar a {font-size: 18px;}
@@ -191,11 +191,7 @@ display: none;
               </form>
             </li>
           
-        <!-- <li class="nav-item ml-3">
-          <form class="form-inline">
-            <button style="border: none; outline: none;" class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-bell"></i>
-          </form>
-        </li> -->
+     
         <li class="nav-item ml-3">
           <form class="form-inline" method="get" action="/users/find">
             <button style="border: none; outline: none;" class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-user"></i>
@@ -215,9 +211,7 @@ display: none;
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="confirmationModalLabel">Confirm Logut</h5>
-        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button> -->
+      
       </div>
       <div class="modal-body">
         Are you sure you want to logout?
@@ -321,15 +315,7 @@ display: none;
   <div id="videos"></div>
   
 </div>
-<!-- <div>
 
-
-<iframe width="1000" height="800" src="http://localhost:5000/embed?key=660ce2f8b0a3fb0e5b2572dd-e5aca8c0-2b95-49c2-9c05-b464ffb5cd7c-intro-dbox.mp4" frameborder='0'></iframe>
-
-</div> -->
-<!-- <div>
-  <iframe width="1000" height="800" src="https://streambox.onrender.com/embed?key=660f98077ac35193d83b7385-b4a7c029-c9df-4958-8084-0aaf7e62fa79-infosec-1.mp4" frameborder='0'></iframe>
-</div> -->
 
 <script src="/static/js/cards.js"></script>
 <script>
@@ -355,7 +341,7 @@ function closeSide() {
     </script>
     <script>
       document.querySelector('.explore').addEventListener('click', function() {
-          const tags = document.querySelector('.explore-tags'); // Select the explore-tags element
+          const tags = document.querySelector('.explore-tags'); 
           if (tags.style.display === 'none' || tags.style.display === '') {
               tags.style.display = 'block';
           } else {

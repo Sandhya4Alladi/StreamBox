@@ -4,19 +4,19 @@ import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
-//update a user
+
 router.put("/:id", verifyToken, update)
 
-//delete a user
+
 router.delete("/:id", verifyToken, deleteUser)
 
-//get a user
+
 router.get("/find", verifyToken, getUser)
 
-//like a video
+
 router.post("/like", verifyToken, like)
 
-//dislike a video
+
 router.post("/dislike", verifyToken, dislike);
 
 router.post("/watch", verifyToken, watch)

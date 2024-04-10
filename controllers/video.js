@@ -1,15 +1,13 @@
 import User from "../models/User.js";
 import Video from "../models/Video.js";
 import Comment from "../models/Comment.js";
-import { createError } from "../error.js";
+
 import { uploadVideo, deleteS3Object } from "./videoupload.js";
 
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
-import ffmpegPath from "ffmpeg-static";
-import child_process from "child_process";
 import Custom from "../models/Custom.js";
 
 const s3 = new AWS.S3();
@@ -25,7 +23,7 @@ AWS.config.update(
   true
 );
 
-//To extract Images
+
 export async function extractS3data(bucketName, objectKey) {
   const s3Obj = await s3
     .getObject({
@@ -34,11 +32,10 @@ export async function extractS3data(bucketName, objectKey) {
     })
     .promise();
   const s3ObjData = Buffer.from(s3Obj.Body).toString("base64");
-  // console.log(s3ObjData)
+
   return s3ObjData;
 }
 
-//To extract VTTs & Videos
 export const extractS3Object = async (req, res, next) => {
   const data = decodeURIComponent(req.query.data);
   const Data = JSON.parse(data);
@@ -307,7 +304,7 @@ export const search = async (req, res, next) => {
         },
       },
     ]);
-    // console.log(videos)
+ 
     const images = await getCards(videos);
     res.render("home", { data: videos, images: images });
   } catch (err) {
@@ -315,63 +312,11 @@ export const search = async (req, res, next) => {
   }
 };
 
-// export const getAnalytics = async (req, res, next) => {
-//   try {
-//     // Fetch video analytics data from MongoDB
-//     const videoAnalytics = await Video.find(
-//       { userId: req.user.id },
-//       "title likes dislikes views plays"
-//     );
-//     let videoinfo = [];
-//     for (let i = 0; i < videoAnalytics.length; i++) {
-//       const eachvideoinfo = {
-//         title: videoAnalytics[i].title,
-//         views: videoAnalytics[i].views,
-//         plays: videoAnalytics[i].plays,
-//         likes: videoAnalytics[i].likes,
-//         dislikes: videoAnalytics[i].dislikes,
-//       };
-//       videoinfo.push(eachvideoinfo);
-//     }
-//     const n = videoinfo.length;
-//     // Calculate overall totals
-//     const overall = {
-//       totalViews: videoAnalytics.reduce(
-//         (total, video) => total + video.views,
-//         0
-//       ),
-//       totalPlays: videoAnalytics.reduce(
-//         (total, video) => total + video.plays,
-//         0
-//       ),
-//       totalLikes: videoAnalytics.reduce(
-//         (total, video) => total + video.likes,
-//         0
-//       ),
-//       totalDisLikes: videoAnalytics.reduce(
-//         (total, video) => total + video.dislikes,
-//         0
-//       ),
-//     };
 
-//     res.render("analytics", {
-//       videoinfo: JSON.stringify(videoinfo),
-//       overall: JSON.stringify(overall),
-//       n: n,
-//     });
-//     console.log("overall....", overall);
-//     console.log("videoinfo...", videoinfo);
-//   } catch (error) {
-//     console.error("Error fetching video analytics:", error);
-//     res
-//       .status(500)
-//       .json({ success: false, message: "Error fetching video analytics" });
-//   }
-// };
 
 export const getAnalytics = async (req, res, next) => {
   try {
-    // Fetch video analytics data from MongoDB
+
     const videoAnalytics = await Video.find(
       { userId: req.user.id },
       "title views plays likes dislikes"
@@ -389,7 +334,6 @@ export const getAnalytics = async (req, res, next) => {
       videoinfo.push(eachvideoinfo);
     }
 
-    // Calculate overall totals
     const overall = {
       totalViews: videoAnalytics.reduce((total, video) => total + video.views, 0),
       totalPlays: videoAnalytics.reduce((total, video) => total + video.plays, 0),
@@ -397,14 +341,14 @@ export const getAnalytics = async (req, res, next) => {
       totalDisLikes: videoAnalytics.reduce((total, video) => total + video.dislikes, 0),
     };
 
-    // Render the analytics view with the data
+
     res.render("analytics", {
       videoinfo: JSON.stringify(videoinfo),
       overall: JSON.stringify(overall),
       n: videoinfo.length,
     });
   } catch (error) {
-    // console.error("Error fetching video analytics:", error);
+
     res.status(500).json({ success: false, message: "Error fetching video analytics" });
   }
 };
