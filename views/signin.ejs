@@ -22,7 +22,8 @@
                     <img src="/images/play.png" class="img-fluid" alt="logo">
                     <h3>StreamBox</h3>
                 </div><br><br>
-                <div class="rounded bg-white shadow p-5">
+                <div class="rounded bg-white">
+                    
                 <form method="post" action='/auth/userValidation'>
                     <h3 class="text-dark fw-bolder fs-4 mb-2">Sign In</h3><br>
                     <div class="form-floating mb-3">
@@ -37,8 +38,14 @@
                     </form>
                       <form method="get" action="/auth/forgotpassword">
                         <button class="btn btn-light"> Forgot Password? </button>
+                    </form><br>
+                    <div>
+                    <form class="rounded bg-white" action="/auth/signup" method="GET">
+                        <div class="fw-normal text-muted mb-3">
+                            New User? <button class="btn btn-primary">Sign Up</button>
+                        </div>
                     </form>
-
+                    </div>
                 </div>
                 
             </div>
