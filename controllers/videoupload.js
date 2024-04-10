@@ -70,7 +70,7 @@ export const uploadVideo = async (req, res) => {
       });
     });
  
-    await upscaleVideo(videobucketName, videoObjectKey);
+    // await upscaleVideo(videobucketName, videoObjectKey);
     
     const imagebucketname = process.env.IMAGE_BUCKET;
     const imageName = (req.files.imageFile[0].originalname).replace(/ /g, "");
