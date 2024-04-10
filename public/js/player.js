@@ -4,7 +4,8 @@
 function showMessageBox(key) {
   document.getElementById('messageBoxOverlay').style.display = 'flex';
   const keyval=key.toString();
-  document.getElementById('embed-code').innerText = `<iframe width="1000" height="800" src="http://3.110.209.65:5000/embed?key=${keyval}" frameborder='0'></iframe>`
+  document.getElementById('embed-code').innerText = `<iframe width="1000" height="800" src="https://streambox.onrender.com/embed?key=${keyval}" frameborder='0'></iframe>`
+  
 }
 
 // Function to close the message box
