@@ -70,5 +70,5 @@ function toggleEditMode() {
 
 const cancel = document.getElementById('cancel');
 cancel.addEventListener('click', function(event){
-    window.location.href='/'
+    window.location.href='/customs'
 });
