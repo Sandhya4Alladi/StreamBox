@@ -34,6 +34,7 @@ export async function extractS3data(bucketName, objectKey) {
     })
     .promise();
   const s3ObjData = Buffer.from(s3Obj.Body).toString("base64");
+  // console.log(s3ObjData)
   return s3ObjData;
 }
 
@@ -160,7 +161,7 @@ export const getWatchLater = async (req, res, next) => {
 export const updateVideo = async (req, res, next) => {
   try {
     const video = await Video.findById(req.params.id);
-    if (!video) return next(createError(404, "Video not found!"));
+    if (!video) return res.status(404).send("Video not found!");
     if (req.user.id === video.userId) {
       const updatedVideo = await Video.findByIdAndUpdate(
         req.params.id,
@@ -171,7 +172,7 @@ export const updateVideo = async (req, res, next) => {
       );
       res.status(200).json(updatedVideo);
     } else {
-      return next(createError(403, "You can update only your video!"));
+      return res.status(403).send("You can update only your video!");
     }
   } catch (err) {
     next(err);
@@ -238,11 +239,13 @@ export const deleteVideo = async (req, res, next) => {
 export const getVideo = async (req, res, next) => {
   try {
     const video = await Video.findById(req.params.id);
+    if (!video) return res.status(404).send("Video Not Found");
     res.status(200).json(video);
   } catch (err) {
     next(err);
   }
 };
+
 
 export const addView = async (req, res, next) => {
   try {
@@ -312,13 +315,68 @@ export const search = async (req, res, next) => {
   }
 };
 
+// export const getAnalytics = async (req, res, next) => {
+//   try {
+//     // Fetch video analytics data from MongoDB
+//     const videoAnalytics = await Video.find(
+//       { userId: req.user.id },
+//       "title likes dislikes views plays"
+//     );
+//     let videoinfo = [];
+//     for (let i = 0; i < videoAnalytics.length; i++) {
+//       const eachvideoinfo = {
+//         title: videoAnalytics[i].title,
+//         views: videoAnalytics[i].views,
+//         plays: videoAnalytics[i].plays,
+//         likes: videoAnalytics[i].likes,
+//         dislikes: videoAnalytics[i].dislikes,
+//       };
+//       videoinfo.push(eachvideoinfo);
+//     }
+//     const n = videoinfo.length;
+//     // Calculate overall totals
+//     const overall = {
+//       totalViews: videoAnalytics.reduce(
+//         (total, video) => total + video.views,
+//         0
+//       ),
+//       totalPlays: videoAnalytics.reduce(
+//         (total, video) => total + video.plays,
+//         0
+//       ),
+//       totalLikes: videoAnalytics.reduce(
+//         (total, video) => total + video.likes,
+//         0
+//       ),
+//       totalDisLikes: videoAnalytics.reduce(
+//         (total, video) => total + video.dislikes,
+//         0
+//       ),
+//     };
+
+//     res.render("analytics", {
+//       videoinfo: JSON.stringify(videoinfo),
+//       overall: JSON.stringify(overall),
+//       n: n,
+//     });
+//     console.log("overall....", overall);
+//     console.log("videoinfo...", videoinfo);
+//   } catch (error) {
+//     console.error("Error fetching video analytics:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, message: "Error fetching video analytics" });
+//   }
+// };
+
 export const getAnalytics = async (req, res, next) => {
   try {
     // Fetch video analytics data from MongoDB
     const videoAnalytics = await Video.find(
       { userId: req.user.id },
-      "title likes dislikes views plays"
+      "title views plays likes dislikes"
     );
+
     let videoinfo = [];
     for (let i = 0; i < videoAnalytics.length; i++) {
       const eachvideoinfo = {
@@ -330,114 +388,27 @@ export const getAnalytics = async (req, res, next) => {
       };
       videoinfo.push(eachvideoinfo);
     }
-    const n = videoinfo.length;
+
     // Calculate overall totals
     const overall = {
-      totalViews: videoAnalytics.reduce(
-        (total, video) => total + video.views,
-        0
-      ),
-      totalPlays: videoAnalytics.reduce(
-        (total, video) => total + video.plays,
-        0
-      ),
-      totalLikes: videoAnalytics.reduce(
-        (total, video) => total + video.likes,
-        0
-      ),
-      totalDisLikes: videoAnalytics.reduce(
-        (total, video) => total + video.dislikes,
-        0
-      ),
+      totalViews: videoAnalytics.reduce((total, video) => total + video.views, 0),
+      totalPlays: videoAnalytics.reduce((total, video) => total + video.plays, 0),
+      totalLikes: videoAnalytics.reduce((total, video) => total + video.likes, 0),
+      totalDisLikes: videoAnalytics.reduce((total, video) => total + video.dislikes, 0),
     };
 
+    // Render the analytics view with the data
     res.render("analytics", {
       videoinfo: JSON.stringify(videoinfo),
       overall: JSON.stringify(overall),
-      n: n,
+      n: videoinfo.length,
     });
-    console.log("overall....", overall);
-    console.log("videoinfo...", videoinfo);
   } catch (error) {
     console.error("Error fetching video analytics:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error fetching video analytics" });
+    res.status(500).json({ success: false, message: "Error fetching video analytics" });
   }
 };
 
-export const extractS3Video = async (req, res, next) => {
-  try {
-    const data = decodeURIComponent(req.query.data);
-    const Data = JSON.parse(data);
-    console.log("stream route  is called");
-    const params = {
-      Bucket: Data.bucketName,
-      Key: Data.Key,
-    };
-
-    // Fetch the video stream from S3
-    const s3Stream = s3.getObject(params).createReadStream();
-
-    // Set response headers
-    res.set("Content-Type", "video/mp4");
-
-    // Check if transcoding is requested
-    if (req.query.transcode === "true") {
-      let resolutionArgs = ["-vf", "scale=-2:360"]; // Default resolution is 480p
-
-      // Check if resolution parameter is provided in the request
-      if (req.query.resolution) {
-        // Adjust FFmpeg command to the specified resolution
-        resolutionArgs = ["-vf", `scale=-2:${req.query.resolution}`];
-      }
-
-      // Define FFmpeg command to transcode the video
-      const ffmpeg = child_process.spawn(ffmpegPath, [
-        "-i",
-        "pipe:0", // Input from stdin
-        ...resolutionArgs, // Dynamic resolution arguments
-        "-c:v",
-        "libx264", // Video codec
-        "-c:a",
-        "aac", // Audio codec
-        "-f",
-        "mp4", // Output format
-        "pipe:1", // Output to stdout
-      ]);
-
-      // Pipe S3 stream to FFmpeg input
-      s3Stream.pipe(ffmpeg.stdin);
-
-      // Pipe FFmpeg output to response stream
-      ffmpeg.stdout.pipe(res);
-
-      // Handle FFmpeg errors
-      ffmpeg.stderr.on("data", (data) => {
-        console.error(`FFmpeg error: ${data}`);
-      });
-
-      // Handle FFmpeg process exit
-      ffmpeg.on("close", (code) => {
-        if (code !== 0) {
-          console.error(`FFmpeg process exited with code ${code}`);
-        }
-      });
-    } else {
-      // Pipe S3 stream directly to response
-      s3Stream.pipe(res);
-    }
-
-    // Handle errors
-    s3Stream.on("error", (err) => {
-      console.error("Error streaming video from S3:", err);
-      res.status(500).send("Error streaming video from S3");
-    });
-  } catch (err) {
-    console.error("Error extracting S3 object:", err);
-    res.status(500).send("Error extracting S3 object");
-  }
-};
 
 export const getPlaybackPosition = async (req, res) => {
   try {
@@ -453,7 +424,7 @@ export const getPlaybackPosition = async (req, res) => {
   }
 };
 
-export const storePlaybackPositon = (req, res) => {
+export const storePlaybackPosition = (req, res) => {
   try {
     const { videoId } = req.params;
     const playbackPosition = req.body.playbackPosition;
@@ -461,7 +432,7 @@ export const storePlaybackPositon = (req, res) => {
     req.session.save();
     res.sendStatus(200);
   } catch (err) {
-    console.error("Error storing playback position tosession:", error);
+    console.error("Error storing playback position tosession:", err);
     res.status(500).json({ error: "Failed to set playback position" });
   }
 };

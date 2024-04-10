@@ -1,5 +1,5 @@
 import express from "express";
-import { addVideo, deleteVideo, trend, addView, plays, getByTag, search, getHomeCards, getMyVideos, getMyFav,  extractS3Object, getWatchLater, extractS3Video, getAnalytics, getPlaybackPosition, storePlaybackPositon, extractS3data } from "../controllers/video.js";
+import { addVideo, deleteVideo, trend, addView, plays, getByTag, search, getHomeCards, getMyVideos, getMyFav,  extractS3Object, getWatchLater, getAnalytics, getPlaybackPosition, storePlaybackPosition, extractS3data } from "../controllers/video.js";
 import { verifyToken } from "../verifyToken.js";
 
 import path from "path";
@@ -66,7 +66,7 @@ router.get("/embed", verifyToken, (req,res) => {
    res.render("embed")
 });
 
-router.post('/playbackposition/:videoId', verifyToken, storePlaybackPositon);
+router.post('/playbackposition/:videoId', verifyToken, storePlaybackPosition);
  
 router.get('/playbackposition/:videoId', verifyToken, getPlaybackPosition);
 

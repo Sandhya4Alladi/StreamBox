@@ -2,7 +2,7 @@ import Custom from "../models/Custom.js";
 import { extractS3data } from "./video.js";
 import { deleteS3Object, uploadFile } from "./videoupload.js";
 import {v4 as uuidv4} from 'uuid';
- 
+
 export const addCustoms = async(req, res, next) => {
     try{
         const pres_custom = await Custom.findOne({userId: req.user.id});
@@ -30,7 +30,7 @@ export const addCustoms = async(req, res, next) => {
                 });
             });
         }
- 
+
         const color = req.body.color;
         const theme = req.body.theme;
         console.log(req.body)
@@ -51,8 +51,8 @@ export const addCustoms = async(req, res, next) => {
         next(err);
     }
 }
- 
- 
+
+
 export const getCustoms = async(req, res, next) => {
     try{
         const custom = await Custom.findOne({userId: req.user.id});

@@ -3,9 +3,9 @@ import multer from "multer";
 import dotenv from "dotenv";
 import vttConvert from "aws-transcription-to-vtt";
 import { v4 as uuidv4 } from 'uuid';
-
+ 
 dotenv.config();
-
+ 
 AWS.config.update(
   {
     region: process.env.AWS_REGION,
@@ -16,28 +16,27 @@ AWS.config.update(
   },
   true
 );
-
-// Create an S3 instance
-const s3 = new AWS.S3({
+ 
+export const s3 = new AWS.S3({
   useDualstackEndpoint: true,
   region: process.env.AWS_REGION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   }});
-
-const transcribeService = new AWS.TranscribeService();
-
+ 
+export const transcribeService = new AWS.TranscribeService();
+ 
 const storage = multer.memoryStorage();
 export const upload = multer({ storage });
-
-export const uploadFile = (bucketName, fileName, fileContent, callback) => {
+ 
+export async function uploadFile(bucketName, fileName, fileContent, callback) {
   const uploadParams = {
     Bucket: bucketName,
     Body: fileContent,
     Key: fileName,
   };
-
+ 
   s3.upload(uploadParams, (err, data) => {
     if (err) {
       console.error("Error uploading file to S3:", err);
@@ -48,18 +47,18 @@ export const uploadFile = (bucketName, fileName, fileContent, callback) => {
     }
   });
 };
-
+ 
 export const uploadVideo = async (req, res) => {
   try {
     const userId = req.user.id;
     const fileId = uuidv4();
-
+ 
     const videobucketName = process.env.VIDEO_BUCKET;
     const videoName = (req.files.videoFile[0].originalname).replace(/ /g, "");
     console.log(videoName)
-    const videoObjectKey = `${userId}-${fileId}-${videoName}`; 
+    const videoObjectKey = `${userId}-${fileId}-${videoName}`;
     const videodata = req.files.videoFile[0].buffer;
-
+ 
     await new Promise((resolve, reject) => {
       uploadFile(videobucketName, videoObjectKey, videodata, (err, videoUrl) => {
         if (err) {
@@ -70,13 +69,14 @@ export const uploadVideo = async (req, res) => {
         }
       });
     });
-
-
+ 
+    await upscaleVideo(videobucketName, videoObjectKey);
+    
     const imagebucketname = process.env.IMAGE_BUCKET;
     const imageName = (req.files.imageFile[0].originalname).replace(/ /g, "");
-    const imageObjectKey = `${userId}-${fileId}-${imageName}`; 
+    const imageObjectKey = `${userId}-${fileId}-${imageName}`;
     const imagedata = req.files.imageFile[0].buffer ;
-
+ 
     await new Promise((resolve, reject) => {
       uploadFile(imagebucketname, imageObjectKey, imagedata, (err, imageUrl) => {
         if (err) {
@@ -87,10 +87,9 @@ export const uploadVideo = async (req, res) => {
         }
       });
     });
-
-    // Transcribe video and upload VTT file here...
+ 
     const vttObjectKey = `${userId}-${fileId}-${videoName}.vtt`
-    const vttUrl = await new Promise ((resolve,reject) => {
+    await new Promise ((resolve,reject) => {
       transcribeVideo(videobucketName, videoObjectKey)
               .then((jsonData) => {
                 const vtt = vttConvert(jsonData);
@@ -110,17 +109,16 @@ export const uploadVideo = async (req, res) => {
     console.log(videoObjectKey)
     console.log(imageObjectKey)
     console.log(vttObjectKey)
-
-    // Return the Object Keys of uploaded video and image
+    
     return { videoObjectKey, imageObjectKey, vttObjectKey };
   } catch (err) {
     console.error("Error uploading files:", err);
     res.status(500).json({ success: false, message: "Failed to upload files." });
   }
 };
-
-
-function transcribeVideo(bucketName, objectKey) {
+ 
+ 
+export function transcribeVideo(bucketName, objectKey) {
   return new Promise((resolve, reject) => {
     const jobName = `${objectKey}`;
     const params = {
@@ -129,35 +127,34 @@ function transcribeVideo(bucketName, objectKey) {
       Media: {
         MediaFileUri: `s3://${bucketName}/${objectKey}`,
       },
-      OutputBucketName: "streambox-vtts", // Destination bucket for transcription output
+      OutputBucketName: "streambox-vtts",
     };
-
+ 
     transcribeService.startTranscriptionJob(params, (err, data) => {
       if (err) {
         console.error("Error starting transcription job:", err);
-        reject(err); // Reject the promise with the error
+        reject(err);
       } else {
         console.log("Transcription job started successfully:", data);
         waitForTranscriptionJobCompletion(jobName, (err, jsonData) => {
           if (err) {
             console.error("Error:", err);
-            reject(err); // Reject the promise with the error
+            reject(err);
           } else {
-            // Process the downloaded JSON data
             console.log("JSON data:", jsonData);
-            resolve(jsonData); // Resolve the promise with the JSON data
+            resolve(jsonData);
           }
         });
       }
     });
   });
 }
-
-function waitForTranscriptionJobCompletion(jobName, callback) {
+ 
+export function waitForTranscriptionJobCompletion(jobName, callback) {
   const params = {
     TranscriptionJobName: jobName,
   };
-
+ 
   function pollStatus() {
     transcribeService.getTranscriptionJob(params, (err, data) => {
       if (err) {
@@ -167,58 +164,135 @@ function waitForTranscriptionJobCompletion(jobName, callback) {
         const { TranscriptionJob } = data;
         const status = TranscriptionJob.TranscriptionJobStatus;
         console.log("Transcription job status:", status);
-
+ 
         if (status === "COMPLETED") {
-          // Extract bucket name and object key from TranscriptFileUri
           const transcriptFileUri =
             TranscriptionJob.Transcript.TranscriptFileUri;
           const parts = transcriptFileUri.split("/");
           const bucketName = parts[3];
           const objectKey = parts.slice(4).join("/");
-
-          // Download JSON file when transcription job is complete
+ 
           downloadJsonFile(bucketName, objectKey, callback);
         } else if (status === "FAILED" || status === "CANCELLED") {
           console.error("Transcription job failed or was cancelled.");
           callback(new Error("Transcription job failed or was cancelled."));
         } else {
-          // Retry after a delay if job is still in progress
-          setTimeout(pollStatus, 5000); // Retry every 5 seconds
+          setTimeout(pollStatus, 5000);
         }
       }
     });
   }
-  // Initial call to start polling
   pollStatus();
 }
-
-function downloadJsonFile(bucketName, objectKey, callback) {
+ 
+export function downloadJsonFile(bucketName, objectKey, callback) {
   const params = {
     Bucket: bucketName,
-    Key: objectKey, // Add the object key parameter
+    Key: objectKey,
   };
-
+ 
   s3.getObject(params, (err, data) => {
     if (err) {
       console.error("Error downloading JSON file from S3:", err);
       callback(err);
     } else {
+      // Data is a buffer containing the contents of the JSON file
       callback(null, JSON.parse(data.Body.toString("utf-8")));
     }
   });
 }
-
-export const deleteS3Object = async (bucketName, objectKey) => {
+ 
+export async function deleteS3Object(bucketName, objectKey){
     const params = {
       Bucket: bucketName,
       Key: objectKey,
     };
-
+ 
     try{
       const data = await s3.deleteObject(params).promise()
       console.log("Object deleted successfully:", data);
-      }
-      catch(err){
+    }catch(err){
         console.error(err);
-      }
     }
+}
+ 
+// const mediaConvert = new AWS.MediaConvert();
+ 
+// export const upscaleVideo = async (bucketName, objectKey) => {
+//   try {
+//     const params = {
+//       Role: 'arn:aws:iam::058264369877:role/mediaconvert',
+//       Settings: {
+//         Inputs: [{
+//           FileInput: `s3://${bucketName}/${objectKey}`
+//         }],
+//         OutputGroups: [{
+//           Name: 'File Group',
+//           OutputGroupSettings: {
+//             Type: 'FILE_GROUP_SETTINGS',
+//             FileGroupSettings: {
+//               Destination: `s3://${process.env.UPSCALED_VIDEO_BUCKET}/`
+//             }
+//           },
+//           Outputs: [
+//             {
+//               Extension: 'mp4',
+//               VideoDescription: {
+//                 Width: 640,
+//                 Height: 360,
+//                 ScalingBehavior: 'DEFAULT',
+//                 CodecSettings: {
+//                   Codec: 'H.264'
+//                 }
+//               }
+//             },
+//             {
+//               Extension: 'mp4',
+//               VideoDescription: {
+//                 Width: 1280,
+//                 Height: 720,
+//                 ScalingBehavior: 'DEFAULT',
+//                 CodecSettings: {
+//                   Codec: 'H.264'
+//                 }
+//               }
+//             },
+//             {
+//               Extension: 'mp4',
+//               VideoDescription: {
+//                 Width: 1920,
+//                 Height: 1080,
+//                 ScalingBehavior: 'DEFAULT',
+//                 CodecSettings: {
+//                   Codec: 'H.264'
+//                 }
+//               }
+//             }
+//           ]
+//         }]
+//       }
+//     };
+ 
+//     const { Job } = await mediaConvert.createJob(params).promise();
+//     console.log("Job created:", Job.Id);
+ 
+//     // Monitor job status and handle completion
+//     const interval = setInterval(async () => {
+//       const { Job } = await mediaConvert.getJob({ Id: Job.Id }).promise();
+//       const status = Job.Status;
+//       console.log(`Transcoding job status: ${status}`);
+//       if (status === 'COMPLETE') {
+//         clearInterval(interval);
+//         console.log('Transcoding job completed');
+//       } else if (status === 'ERROR') {
+//         clearInterval(interval);
+//         console.error('Transcoding job failed');
+//       }
+//     }, 5000); // Check status every 5 seconds
+ 
+//     console.log('Transcoding job started');
+//   } catch (err) {
+//     console.error('Error transcoding video:', err);
+//   }
+// };
+ 
