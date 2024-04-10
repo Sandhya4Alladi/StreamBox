@@ -56,7 +56,7 @@ app.get("/",(req, res) => {
 });
 
 
-app.get("/embed", verifyToken, (req,res) => {
+app.get("/embed", (req,res) => {
   console.log(req.query.key);
   res.render("embed", {key: req.query.key})
 });
