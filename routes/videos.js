@@ -40,7 +40,7 @@ router.get('/playvideo', verifyToken, async (req, res) => {
    res.render('player', {key: req.query.data, id: req.query.id, custom: JSON.stringify(custom), logo:logo });
 });
 
-router.get('/stream', verifyToken, extractS3Object)
+router.get('/stream', extractS3Object)
 router.get('/streamvideo', verifyToken, extractS3Object)
 
 router.get('/myvideos', verifyToken, getMyVideos)
