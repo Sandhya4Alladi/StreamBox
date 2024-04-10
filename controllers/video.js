@@ -404,7 +404,7 @@ export const getAnalytics = async (req, res, next) => {
       n: videoinfo.length,
     });
   } catch (error) {
-    console.error("Error fetching video analytics:", error);
+    // console.error("Error fetching video analytics:", error);
     res.status(500).json({ success: false, message: "Error fetching video analytics" });
   }
 };

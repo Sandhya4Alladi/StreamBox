@@ -47,7 +47,7 @@ export const addCustoms = async(req, res, next) => {
         console.log(custom);
         res.redirect('/customs');
     }catch(err){
-        console.log(err);
+        // console.log(err);
         next(err);
     }
 }
@@ -70,7 +70,7 @@ export const getCustoms = async(req, res, next) => {
             res.render("player-settings", {userCustom: custom, logo: imgData});
         }
     }catch(err){
-        console.error(err);
+        // console.error(err);
         next(err);
     }
 }
