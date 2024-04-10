@@ -82,7 +82,7 @@
         </div>
         <div class="videoPlayer">
           <video id="videoPlayer"  style="width:100%;"  controls controlsList="nodownload" muted loop >
-            <source id="videoSource" src="/videos/streamvideo?data=<%= encodeURIComponent(JSON.stringify({ bucketName: process.env.VIDEO_BUCKET , Key: key })) %>" type="video/mp4">
+            <source id="videoSource" src="/videos/stream?data=<%= encodeURIComponent(JSON.stringify({ bucketName: process.env.VIDEO_BUCKET , Key: key })) %>" type="video/mp4">
             <track src="/videos/stream?data=<%= encodeURIComponent(JSON.stringify({ bucketName: process.env.VTT_BUCKET, Key: key + '.vtt' })) %>" label="English captions" kind="captions" srclang="en"  default>
           </video>
         </div>
