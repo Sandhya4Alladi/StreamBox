@@ -11,7 +11,7 @@
 <body>
       <div class="video-player">
         <video id="videoPlayer" width="70%"  controls controlsList="nodownload" muted loop >
-            <source id="videoSource" src="https://streambox.onrender.com/videos/streamvideo?data=<%= encodeURIComponent(JSON.stringify({ bucketName: process.env.VIDEO_BUCKET , Key: key })) %>" type="video/mp4">
+            <source id="videoSource" src="https://streambox.onrender.com/videos/stream?data=<%= encodeURIComponent(JSON.stringify({ bucketName: process.env.VIDEO_BUCKET , Key: key })) %>" type="video/mp4">
             <track src="https://streambox.onrender.com/videos/stream?data=<%= encodeURIComponent(JSON.stringify({ bucketName: process.env.VTT_BUCKET, Key : key + '.vtt' })) %>" label="English captions" kind="captions" srclang="en"  default>
         </video>
     </body>

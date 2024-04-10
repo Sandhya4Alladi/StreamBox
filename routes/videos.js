@@ -41,7 +41,7 @@ router.get('/playvideo', verifyToken, async (req, res) => {
 });
 
 router.get('/stream', extractS3Object)
-router.get('/streamvideo', verifyToken, extractS3Object)
+// router.get('/streamvideo', verifyToken, extractS3Object)
 
 router.get('/myvideos', verifyToken, getMyVideos)
 
