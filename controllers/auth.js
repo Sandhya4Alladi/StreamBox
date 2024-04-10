@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import Custom from "../models/Custom.js";
-import { error } from "console";
+import { Console, error } from "console";
 dotenv.config()
 
 export const signup = async (req, res, next) => {
@@ -38,13 +38,15 @@ export const verifyEmail = async (req, res, next) => {
   try{
     const useremail = req.body.email;
     req.session.email = useremail;
-
+    console.log(useremail)
     const user = await User.findOne({ email: useremail });
      if (user) 
       return res.status(409).json({message: 'usera already exists'});
+
     const name= useremail.split('@')[0]
 
     const otp = generateRandomNumber();
+    console.log(otp)
     req.session.otp = otp;
 
     req.session.save();
@@ -57,7 +59,7 @@ export const verifyEmail = async (req, res, next) => {
       res.status(200).json({message: "Email sent"})
     }
   }catch(err){
-    console.log(err);
+    console.log(err)
     next(err);
   }
 }
@@ -105,12 +107,12 @@ export const signin = async (req, res, next) => {
   }
 };
 
-function generateRandomNumber() {
+export function generateRandomNumber() {
   const randomNumber = Math.floor(Math.random() * 900000) + 100000;
   return randomNumber.toString();
 }
 
-const sendOTP = async(useremail, subject, html) => {
+export const sendOTP = async(useremail, subject, html) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     secure: false,
