@@ -3,7 +3,7 @@ function display(data, images) {
   if (n === 0) {
     document.getElementById("videos").innerHTML = "No Videos";
   } else {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < n; i++) {
       const card = document.createElement("div");
       card.classList.add("card");
 
